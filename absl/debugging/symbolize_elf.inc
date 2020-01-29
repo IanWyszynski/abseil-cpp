@@ -654,6 +654,7 @@ static ABSL_ATTRIBUTE_NOINLINE FindSymbolResult FindSymbol(
   const int buf_entries = tmp_buf_size / sizeof(buf[0]);
 
   const int num_symbols = symtab->sh_size / symtab->sh_entsize;
+  printf("FindSymbol(%p, ...) num_symbols = %d\n", pc, num_symbols);
 
   // On platforms using an .opd section (PowerPC & IA64), a function symbol
   // has the address of a function descriptor, which contains the real
@@ -717,6 +718,7 @@ static ABSL_ATTRIBUTE_NOINLINE FindSymbolResult FindSymbol(
   if (found_match) {
     const size_t off = strtab->sh_offset + best_match.st_name;
     const ssize_t n_read = ReadFromOffset(fd, out, out_size, off);
+    printf("FindSymbol(%p, ...) found_match = %d, n_read = %lu\n", pc, found_match, n_read);
     if (n_read <= 0) {
       // This should never happen.
       ABSL_RAW_LOG(WARNING,
@@ -943,6 +945,7 @@ static ABSL_ATTRIBUTE_NOINLINE bool ReadAddrMap(
   // are 1000s of threads.
   char maps_path[80];
   snprintf(maps_path, sizeof(maps_path), "/proc/self/task/%d/maps", getpid());
+  printf("Reading /proc/self/task/%d/maps\n", getpid());
 
   int maps_fd;
   NO_INTR(maps_fd = open(maps_path, O_RDONLY));
@@ -1283,6 +1286,7 @@ const char *Symbolizer::GetSymbol(const void *const pc) {
   symbol_buf_[0] = '\0';
 
   ObjFile *const obj = FindObjFile(pc, 1);
+  printf("FindObjectFile(%p, 1) = %p", pc, obj);
   ptrdiff_t relocation = 0;
   int fd = -1;
   if (obj != nullptr) {
