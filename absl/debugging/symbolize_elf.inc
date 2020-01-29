@@ -1456,6 +1456,7 @@ bool Symbolize(const void *pc, char *out, int out_size) {
   ANNOTATE_IGNORE_READS_AND_WRITES_BEGIN();
   SAFE_ASSERT(out_size >= 0);
   debugging_internal::Symbolizer *s = debugging_internal::AllocateSymbolizer();
+  printf("symbolize_elf.inc Symbolize call %p\n", pc);
   const char *name = s->GetSymbol(pc);
   bool ok = false;
   if (name != nullptr && out_size > 0) {
