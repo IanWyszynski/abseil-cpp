@@ -698,7 +698,14 @@ static ABSL_ATTRIBUTE_NOINLINE FindSymbolResult FindSymbol(
 
       // If pc is inside the .opd section, it points to a function descriptor.
       const size_t size = pc_in_opd ? kFunctionDescriptorSize : symbol.st_size;
+      printf("FindSymbol(%p, ...) size = %lu\n", pc, size);
+
       const void *const end_address = ComputeOffset(start_address, size);
+
+      printf("FindSymbol(%p, ...) start_address = %p, end_address = %p\n", pc, start_address, end_address);
+      printf("FindSymbol(%p, ...) symbol.st_name = %u, symbol.st_value = %lu, symbol.st_shndx = %hu\n",
+          pc, symbol.st_name, symbol.st_value, symbol.st_shndx);
+
       if (symbol.st_value != 0 &&  // Skip null value symbols.
           symbol.st_shndx != 0 &&  // Skip undefined symbols.
 #ifdef STT_TLS
